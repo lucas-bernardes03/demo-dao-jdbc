@@ -3,6 +3,7 @@ package model.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,13 +25,45 @@ public class SellerDaoJDBC implements SellerDao {
     }
 
     @Override
-    public void insert(Seller dp) {
-        // TODO Auto-generated method stub
+    public void insert(Seller sl) {
+        PreparedStatement pst = null;
+
+        try{
+            pst = con.prepareStatement(
+                "INSERT INTO seller "
+                + "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+                + "VALUES (?, ?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS);
+            
+            pst.setString(1, sl.getName());
+            pst.setString(2, sl.getEmail());
+            pst.setDate(3, new java.sql.Date(sl.getBirthDate().getTime()));
+            pst.setDouble(4, sl.getBaseSalary());
+            pst.setInt(5, sl.getDepartment().getId());
+
+            int updatedRows = pst.executeUpdate();
+
+            if(updatedRows > 0){
+                ResultSet rs = pst.getGeneratedKeys();
+                if(rs.next()){
+                    int id = rs.getInt(1);
+                    sl.setId(id);
+                }
+                DB.closeResultSet(rs);
+            }
+            else throw new DbException("Unexpected error. No rows updated.");
+        }
+        catch(SQLException e ){
+            throw new DbException(e.getMessage());
+        }
+        finally{
+            DB.closeStatement(pst);
+        }
         
     }
 
     @Override
-    public void update(Seller dp) {
+    public void update(Seller sl) {
         // TODO Auto-generated method stub
         
     }

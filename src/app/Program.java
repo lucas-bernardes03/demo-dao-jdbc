@@ -1,6 +1,9 @@
 package app;
 
+import java.util.Date;
 import java.util.List;
+
+import com.mysql.cj.log.Slf4JLogger;
 
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
@@ -23,5 +26,11 @@ public class Program {
         System.out.println("\n--- TEST: seller findAll ---");
         list = sellerDao.findAll();
         for(Seller sl : list) System.out.println(sl);
+
+        System.out.println("\n--- TEST: seller insert ---");
+        Seller newsl = new Seller(null, "Mark", "mark@gmail.com", new Date(), 6500.0, dp);
+        sellerDao.insert(newsl);
+        System.out.println("Inserted new id: " + newsl.getId());
+
     }
 }
