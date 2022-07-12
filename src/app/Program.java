@@ -3,8 +3,6 @@ package app;
 import java.util.Date;
 import java.util.List;
 
-import com.mysql.cj.log.Slf4JLogger;
-
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.Department;
@@ -32,5 +30,10 @@ public class Program {
         sellerDao.insert(newsl);
         System.out.println("Inserted new id: " + newsl.getId());
 
+        System.out.println("\n--- TEST: seller update ---");
+        seller = sellerDao.findById(1);
+        seller.setName("Horacio Junior");
+        sellerDao.update(seller);
+        System.out.println("Update completed!");
     }
 }
